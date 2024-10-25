@@ -31,6 +31,10 @@ jobs:
           echo "base_tag=$BASE_TAG" >> "$GITHUB_OUTPUT"
           echo "versioned_tag=$BASE_TAG-$(date +%Y%m%d)" >> "$GITHUB_OUTPUT"
 
+      - name: Debug tags
+        shell: bash
+        run: echo ${{ steps.image-tag.outputs.base_tag }},${{ steps.image-tag.outputs.versioned_tag }}
+
       - name: Build and Publish Image
         uses: docker/build-push-action@v5
         with:
