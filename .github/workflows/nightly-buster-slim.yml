@@ -26,7 +26,7 @@ jobs:
         shell: bash
         env:
           USER_AND_REPO: ${{ github.repository }}
-        run:
+        run: |
           export BASE_TAG=ghcr.io/${USER_AND_REPO,,}:nightly-buster-slim
           echo "base_tag=$BASE_TAG" >> "$GITHUB_OUTPUT"
           echo "versioned_tag=$BASE_TAG-$(date +%Y%m%d)" >> "$GITHUB_OUTPUT"
