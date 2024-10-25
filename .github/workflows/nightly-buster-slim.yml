@@ -1,0 +1,41 @@
+name: Publish nightly-buster-slim on demand
+
+permissions:
+  contents: read
+  packages: write
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub's Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Define Image Tags
+        id: image-tag
+        shell: bash
+        env:
+          USER_AND_REPO: ${{ github.repository }}
+        run:
+          export BASE_TAG=ghcr.io/${USER_AND_REPO,,}:nightly-buster-slim
+          echo "base_tag=$BASE_TAG" >> "$GITHUB_OUTPUT"
+          echo "versioned_tag=$BASE_TAG-$(date +%Y%m%d)" >> "$GITHUB_OUTPUT"
+
+      - name: Build and Publish Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./nightly/buster/slim
+          push: true
+          tags: |
+            ${{ steps.image-tag.outputs.base_tag }}
+            ${{ steps.image-tag.outputs.versioned_tag }}
