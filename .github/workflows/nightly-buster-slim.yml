@@ -36,6 +36,4 @@ jobs:
         with:
           context: ./nightly/buster/slim
           push: true
-          tags: |
-            ${{ steps.image-tag.outputs.base_tag }}
-            ${{ steps.image-tag.outputs.versioned_tag }}
+          tags: ${{ steps.image-tag.outputs.base_tag }},${{ steps.image-tag.outputs.versioned_tag }}
