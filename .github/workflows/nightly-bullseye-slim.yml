@@ -1,4 +1,4 @@
-name: Publish nightly-buster-slim on demand
+name: Publish nightly-bullseye-slim on demand
 
 permissions:
   contents: read
@@ -25,13 +25,13 @@ jobs:
         id: image-tag
         shell: bash
         run: |
-          export BASE_TAG=ghcr.io/syndelis/rust:nightly-buster-slim
+          export BASE_TAG=ghcr.io/syndelis/rust:nightly-bullseye-slim
           echo "base_tag=$BASE_TAG" >> "$GITHUB_OUTPUT"
           echo "versioned_tag=$BASE_TAG-$(date +%Y%m%d)" >> "$GITHUB_OUTPUT"
 
       - name: Build and Publish Image
         uses: docker/build-push-action@v5
         with:
-          context: ./nightly/buster/slim
+          context: ./nightly/bullseye/slim
           push: true
           tags: ${{ steps.image-tag.outputs.base_tag }},${{ steps.image-tag.outputs.versioned_tag }}
